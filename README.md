@@ -1,12 +1,15 @@
 # 📦 Laboratorio simulado de AWS para el proyecto de InnovatechFP
 
-Este proyecto simula una arquitectura mínima de AWS en tu **entorno local** usando:
-- LocalStack (servicios AWS en Docker)
-- AWS CDK (infraestructura como código)
-- Lambda en Python
-- S3 como almacenamiento
-- Makefile para automatizar todo
-- AWS Glue para transformar los datos
+
+## Descripción
+Este repositorio forma parte de unas clases impartidas durante un periodo formativo en NTT Data por Napoleón Lazardi.
+
+El objetivo es simular el proceso de ETL de nuestro proyecto InnovatechFP 2025 de Viaqua, que consiste en el mantenimiento predictivo con IA de equipos industriales mediante sensorización. La base principal será:
+  - LocalStack: simular los servicios de AWS gratuitamente
+  - AWS CDK: programar la infraestructura
+  - Makefile: automatizar los procesos
+
+Simularemos audios de máquinas industriales que seguirán todo nuestro flujo de datos.
 
 ---
 ## FLujo de datos
