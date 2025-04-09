@@ -98,7 +98,6 @@ function cleanUpResources(mediaRecorder, audioStream) {
 // Función para iniciar la grabación de un solo fragmento
 async function recordFragment() {
   try {
-    console.log(`Iniciando grabación del fragmento ${recordedFragments + 1}...`);
 
     // Crear un nuevo destino de MediaStream
     const audioStream = audioContext.createMediaStreamDestination();
@@ -122,27 +121,17 @@ async function recordFragment() {
         const audioBlob = new Blob([event.data], { type: "audio/webm" });
         await sendToLambda(audioBlob);
 
-        console.log(`Fragmento ${recordedFragments + 1} enviado correctamente.`);
       } else {
         console.warn("Se recibió un fragmento vacío, ignorado.");
       }
     };
 
     mediaRecorder.onstop = () => {
-      console.log(`Grabación del fragmento ${recordedFragments + 1} finalizada.`);
-      recordedFragments++;
-
-      // Detener completamente después de 6 fragmentos
-      if (recordedFragments < maxFragments) {
-        setTimeout(() => {
-          cleanUpResources(mediaRecorder, audioStream);
-          recordFragment(); // Continuar con la siguiente grabación
-        }, 500); // Dar tiempo para limpiar antes de iniciar el siguiente fragmento
-      } else {
-        console.log("Grabación completa de 30 segundos. Se detiene todo.");
+      setInterval(() => {
         cleanUpResources(mediaRecorder, audioStream);
-      }
-    };
+        recordFragment(); // Continuar con la siguiente grabación
+      }, 5000); // Dar tiempo para limpiar antes de iniciar el siguiente fragmento
+  };
 
     mediaRecorder.start(); // Iniciar grabación del fragmento
     console.log("Grabación iniciada para un fragmento de 5 segundos.");

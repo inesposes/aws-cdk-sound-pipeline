@@ -45,9 +45,7 @@ def process_audio_file(audio_file):
     ensure_bucket_exists(bucket_audio_out)
 
     try:
-        # Descargar el archivo a un archivo temporal local
         with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_input_file:
-            print(f"Descargando archivo {audio_file} a {temp_input_file.name}")
             s3.download_fileobj(bucket_audio, audio_file, temp_input_file)
             temp_input_path = temp_input_file.name
     except botocore.exceptions.ClientError as e:
@@ -58,7 +56,6 @@ def process_audio_file(audio_file):
         # Convertir el archivo .webm a .wav
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_output_file:
             temp_output_path = temp_output_file.name
-            print(f"Convirtiendo {temp_input_path} a {temp_output_path} (WAV)")
             (
                 ffmpeg
                 .input(temp_input_path)
@@ -81,7 +78,6 @@ def process_audio_file(audio_file):
     try:
         # Subir el archivo procesado al bucket de salida
         output_key = f"{os.path.splitext(audio_file)[0]}_processed.wav"
-        print(f"Subiendo {reduced_path} a s3://{bucket_audio_out}/{output_key}")
         with open(reduced_path, "rb") as file:
             s3.upload_fileobj(file, bucket_audio_out, output_key)
     except Exception as e:
@@ -91,7 +87,6 @@ def process_audio_file(audio_file):
         os.remove(temp_input_path)
         os.remove(temp_output_path)
         os.remove(reduced_path)
-        print("Archivos temporales eliminados.")
 
 
 def setup_sqs(queue_name):
@@ -147,6 +142,7 @@ def setup_sqs(queue_name):
 
 def poll_sqs_messages(sqs, queue_url):
     print("Esperando mensajes en la cola SQS...")
+    print()
     while True:
         response = sqs.receive_message(QueueUrl=queue_url, MaxNumberOfMessages=1)
         if "Messages" in response:
