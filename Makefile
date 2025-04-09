@@ -12,7 +12,7 @@ ETL_STACK=LambdaETLStack
 
 ### CDK ###
 bootstrap:
-	cd cdk && $(CDK) bootstrap --app "python3 app.py"
+	export JSII_SILENCE_WARNING_DEPRECATED_NODE_VERSION=1 && cd cdk && $(CDK) bootstrap --app "python3 app.py"
 
 synth:
 	cd cdk && $(CDK) synth --app "python3 app.py"
@@ -28,10 +28,10 @@ destroy:
 ### LOCALSTACK ###
 
 start-localstack:
-	docker-compose up -d
+	docker compose up -d
 
 stop-localstack:
-	docker-compose down
+	docker compose down
 
 ### LAMBDA ###
 invoke:
@@ -46,8 +46,6 @@ list-bucket:
 list-output-bucket:
 	awslocal s3 ls s3://$(BUCKET_OUTPUT)
 
-get-object:
-	@awslocal s3 ls s3://$(BUCKET_NAME)/ | tail -n 1 | awk '{print $$4}' | xargs -r -I {} awslocal s3 cp s3://$(BUCKET_NAME)/{} -
 clean:
 	rm -f response.json
 
