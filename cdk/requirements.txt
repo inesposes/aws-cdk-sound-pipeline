@@ -9,3 +9,6 @@ noisereduce
 scipy
 soundfile
 ffmpeg-python
+awscli 
+awscli-local
+ffmpeg
